@@ -3,14 +3,13 @@ import React from 'react'
 class Toolbar extends React.Component {
   constructor(props) {
     super(props)
-    console.log('TOOLBAR props--->', this.props)
     this.state = {
       selectedAll: props.selectedAll
     }
+    console.log('TOOLBAR state--->', this.state)
   }
 
   render() {
-    console.log('TOOLBAR state--->', this.state)
     return (
       <div className="row toolbar">
         <div className="col-md-12">

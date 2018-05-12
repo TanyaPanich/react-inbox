@@ -14,20 +14,18 @@ class App extends Component {
 
   toggleClass = (msg, nameOfClass) => {
     const index = this.state.messages.indexOf(msg)
-    //removed .slice(0) method
     let newMessages = this.state.messages
-    console.log('From toggle new: ', newMessages)
     newMessages[index][nameOfClass] = !newMessages[index][nameOfClass]
     this.setState({ messages: newMessages })
   }
 
   render() {
     return (
-       <main>
+       <div className='container'>
         <h1>React Inbox</h1>
         <Toolbar messages={ this.state.messages } />
         <Messages messages={ this.state.messages } toggleClass={this.toggleClass} />
-      </main>
+      </div>
     )
   }
 }

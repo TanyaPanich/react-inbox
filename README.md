@@ -7,8 +7,7 @@ Stories
 There are a lot of stories here, which is intentional. The idea is for you to become fluent with these basic concepts before moving on to the more complex aspects of React.
 
 
-
-Message Display
+1. Message Display
 Users should see a list of messages with the correct styles
 
 When a user views the app
@@ -18,13 +17,15 @@ If the message is unread, it should have the unread
 If the message is selected, it should have the selected style and the box should be checked
 If there are labels on a message, they should appear
 If the message is starred, then the star should be filled in, otherwise it should be empty
-Starring
+
+2. Starring
 Users should be able to star and unstar a message.
 
 When a user clicks the star next to a message
 Then it should toggle whether the message is starred or not
 For example if it was starred, and you clicked on it, it should be unstarred
-Selecting Individual Messages
+
+3. Selecting Individual Messages
 Users should be able to select and deselect individual messages.
 
 When a user checks the checkbox on a message
@@ -32,7 +33,8 @@ Then the message should be highlighted
 
 When a user unchecks the checkbox on a message
 Then the message should _not_ be highlighted
-Bulk Select / Deselect
+
+4. Bulk Select / Deselect
 Users should be able to select and deselect messages.
 
 Given that no messages are selected
