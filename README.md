@@ -1,13 +1,12 @@
 Github:
 https://github.com/TanyaPanich/react-inbox
-Heroku:
-
 
 Stories
 There are a lot of stories here, which is intentional. The idea is for you to become fluent with these basic concepts before moving on to the more complex aspects of React.
 
 
 1. Message Display --> done
+
     Users should see a list of messages with the correct styles
 
     When a user views the app
@@ -19,6 +18,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     If the message is starred, then the star should be filled in, otherwise it should be empty
 
 2. Starring --> done
+
     Users should be able to star and unstar a message.
 
     When a user clicks the star next to a message
@@ -26,6 +26,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     For example if it was starred, and you clicked on it, it should be unstarred
 
 3. Selecting Individual Messages --> done
+
     Users should be able to select and deselect individual messages.
 
     When a user checks the checkbox on a message
@@ -50,6 +51,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     Then it should uncheck all messages (and unhighlight them)
 
 4. Marking Messages as Read --> done
+
     Users should be able to mark messages as read.
 
     When a user selects messages
@@ -58,6 +60,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     And should no longer be bold
 
 5. Marking Messages as Unread --> done
+
     Users should be able to mark messages as unread.
 
     When a user selects messages
@@ -66,6 +69,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     And should should appear bold
 
 6. Deleting Messages --> done
+
     Users should be able to delete selected messages
 
     When a user selects messages
@@ -75,6 +79,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     And "Select All" button should update
 
 7. Adding Labels --> done
+
     When a user selects messages from the sidebar
     And chooses a label from the "Add Label" dropdown
     Then that label should be added to all selected messages
@@ -82,6 +87,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     NOTE: It's OK to hard-code the list of labels
 
 8. Removing Labels --> done
+
     When a user selects messages from the sidebar
     And chooses a label from the "Remove Label" dropdown
     Then that label should be removed from all of the selected messages that contain the label
@@ -90,6 +96,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     NOTE: If you try to remove a label from a message that doesn't have that label, there should be no errors
 
 9. Unread Message Count --> done
+
     Users should always see the number of unread messages
 
     When a user changes which messages are read / unread
@@ -99,6 +106,7 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     And when there's more than 1 unread message it should display "_n_ unread messages"
 
 10. Select All Button State --> done
+
     Users should see the state of the select all button change as messages are selected
 
     When no messages are checked
@@ -112,4 +120,5 @@ There are a lot of stories here, which is intentional. The idea is for you to be
     NOTE: the "Select All" button must stay in sync at all times.
 
 11. Select All Button State --> done
+
     Users should not be able to click on toolbar items when no messages are selected
