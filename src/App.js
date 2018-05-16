@@ -5,15 +5,7 @@ import Toolbar from './components/Toolbar'
 
 
 class App extends Component {
-  // constructor(){
-  //   super()
-  //   this.state = {
-      // messages: this.props.messages
-      //from API:
-  //   }
-  // }
 
-  //from API
   state = { messages: [] }
 
   async componentDidMount() {
@@ -25,11 +17,34 @@ class App extends Component {
     }
   }
 
+  //making changes to be peristed
+  async storeState(ids, cmd, prop, val) {
+    let info = {'messageIds':ids, 'command':cmd }
+    if (val !== null) {
+      info[prop] = val
+    }
+    console.log("storeState:", info)
+
+    await fetch(`/api/messages`, {
+      method: 'PATCH',
+      body: JSON.stringify(info),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }
+    })
+  }
+
   toggleClass = (message, nameOfClass) => {
     const index = this.state.messages.indexOf(message)
     // eslint-disable-next-line
     this.state.messages[index][nameOfClass] = !this.state.messages[index][nameOfClass]
     this.setState({ messages: this.state.messages })
+
+    if (nameOfClass === 'starred') {
+      const id = this.state.messages[index].id
+      this.storeState([id], 'star', 'star', this.state.messages[index][nameOfClass])
+    }
   }
 
   countMsgProps = (property) => {
@@ -40,18 +55,17 @@ class App extends Component {
       if (message[property])
         count++
     })
-    console.log('count of', property, 'is', count)
+    //console.log('count of', property, 'is', count)
     return count
   }
 
   bulkSelectUnselect = () => {
-    // eslint-disable-next-line
+        // eslint-disable-next-line
       if (this.countMsgProps('selected') < this.state.messages.length) {
         // eslint-disable-next-line
         this.state.messages.forEach(message => {
           message.selected = true
         })
-        console.log('Select ALL')
         // eslint-disable-next-line
         this.setState({ messages: this.state.messages })
       } else {
@@ -59,7 +73,6 @@ class App extends Component {
         this.state.messages.forEach(message => {
           message.selected = false
         })
-        console.log('Unselect ALL')
         // eslint-disable-next-line
         this.setState({ messages:this.state.messages })
       }
@@ -67,43 +80,54 @@ class App extends Component {
 
     markReadUnread = (booleanValue) => {
       // eslint-disable-next-line
-      this.state.messages.forEach(message => {
+      let ids = []
+      this.state.messages.forEach((message, idx) => {
         if (message.selected) {
           message.read = booleanValue
-          console.log('is read? ', booleanValue)
+          ids.push(message.id)
+          //console.log('is read? ', booleanValue)
         }
       })
       // eslint-disable-next-line
       this.setState({ messages:this.state.messages })
+      this.storeState(ids, 'read', 'read', booleanValue)
     }
 
     updateMsgLabels = (label, booleanValue) => {
       // eslint-disable-next-line
+      let ids = []
       this.state.messages.forEach(message => {
         if (message.selected) {
-          if (booleanValue && !message.labels.includes(label) && label !== "false") {
+          ids.push(message.id)
+          if (booleanValue && !message.labels.includes(label)) {
             //message.labels.push(label)
-            message.labels = [...message.labels, label]
-            console.log('--Label--', label, 'is added')
+            message.labels.push(label)
+            // message.labels = [...message.labels, label]
+            //console.log('--Label--', label, 'is added')
           }
-          else if (!booleanValue && message.labels.includes(label)) {
-            console.log('--Label--', label, 'is removed')
-            message.labels.splice(message.labels.indexOf(label), 1)
+          else if (!booleanValue) {
+            message.labels = message.labels.filter(l => l !== label)
+            //else if (!booleanValue && message.labels.includes(label)) {
+            //console.log('--Label--', label, 'is removed')
+            //message.labels.splice(message.labels.indexOf(label), 1)
           }
         }
       })
       this.setState({ messages:this.state.messages })
+      this.storeState(ids, booleanValue ? 'addLabel' : 'removeLabel', 'label', label)
     }
 
     deleteMsg = () => {
       // eslint-disable-next-line
-      this.state.messages.forEach(message => {
+      let ids = []
+      this.state.messages.forEach((message,idx) => {
         if (message.selected) {
           this.state.messages.splice(this.state.messages.indexOf(message), 1)
-          console.log('After deletetion we have', this.state.messages.length, 'messages')
+          ids.push(message.id)
         }
       })
       this.setState({ messages:this.state.messages })
+      this.storeState(ids, 'delete')
     }
 
 
@@ -111,7 +135,7 @@ class App extends Component {
     if (this.state.messages.length === 0) {
       return <div>Loading...</div>
     } else {
-      console.log('app state', this.state.messages )
+      //console.log('app state', this.state.messages )
       return (
          <div className='App container'>
           <h1>React Inbox</h1>

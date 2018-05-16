@@ -3,7 +3,7 @@ import React from 'react'
 class Toolbar extends React.Component {
   constructor(props) {
     super(props)
-    console.log('TOOLBAR props:', this.props)
+    //console.log('TOOLBAR props:', this.props)
     this.state = {
       messages: this.props.messages,
       countMsgProps: this.props.countMsgProps,

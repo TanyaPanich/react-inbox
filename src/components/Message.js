@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Message = ({message, toggleClass}) => {
+  //console.log("Message", message)
 
   const isRead = message.read ? 'read' : 'unread'
   const isSelected = message.selected ? 'selected' : ''
@@ -8,20 +9,21 @@ const Message = ({message, toggleClass}) => {
   const isStarred = message.starred ? 'star fa fa-star' : 'star fa fa-star-o'
 
   return (
-    <div className={`row message ${isRead} ${isSelected}`}
-      onClick = {() => {toggleClass(message, "read")}}>
+    <div className={`row message ${isRead} ${isSelected}`}>
       <div className="col-xs-1">
         <div className="row">
           <div className="col-xs-2">
           <input type="checkbox" checked={isChecked}
             onChange = {(e) => {
             e.stopPropagation()
+            console.log("onChange.checkbox")
             toggleClass(message, "selected")
           }} />
           </div>
           <div className={`col-xs-2 ${isStarred}`}
             onClick = {(e) => {
             e.stopPropagation()
+            console.log("onClick.star")
             toggleClass(message, "starred")
             }}>
             <i></i>
