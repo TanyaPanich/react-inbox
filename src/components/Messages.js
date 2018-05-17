@@ -21,11 +21,15 @@ class Messages extends React.Component {
       composeMsgForm = <ComposeForm  sendMsg= { this.props.sendMsg }/>
     }
     let allMessages = {}
+    //console.log('Messages expandedMsgId', this.props.expandedMsgId )
     if (this.props.messages) {
       allMessages = this.props.messages.map(message =>
         <Message key={ message.id }
                  message={ message }
-                 toggleClass={ this.state.toggleClass } />)
+                 toggleClass={ this.state.toggleClass }
+                 expandedMsgId={ this.props.expandedMsgId }
+                 msgBodyDiv={ this.props.msgBodyDiv }
+                 expandMsg={ this.props.expandMsg } />)
     }
     return (
       <div className="Messages">
@@ -36,4 +40,4 @@ class Messages extends React.Component {
   }
 }
 
-  export default Messages
+export default Messages

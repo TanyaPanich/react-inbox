@@ -8,7 +8,9 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      messages: []
+      messages: [],
+      expandedMsgId: null,
+      msgBodyDiv: null
     }
   }
 
@@ -52,6 +54,14 @@ class App extends Component {
       const id = this.state.messages[index].id
       this.storeState([id], 'star', 'star', this.state.messages[index][nameOfClass])
     }
+  }
+
+  expandMsg = (message, msgBodyDiv) => {
+    const index = this.state.messages.indexOf(message)
+    // eslint-disable-next-line
+    this.state.messages[index]['read'] = true
+    this.setState({ expandedMsgId: message.id,  msgBodyDiv: msgBodyDiv })
+    this.storeState([message.id], 'read', 'read', true)
   }
 
   countMsgProps = (property) => {
@@ -133,7 +143,9 @@ class App extends Component {
 
   clickComposeMsg = () => {
     this.setState ({
-      composeCliked: !this.state.composeCliked
+      composeCliked: !this.state.composeCliked,
+      expandedMsgId: null,
+      msgBodyDiv: null
     })
   }
 
@@ -168,7 +180,7 @@ class App extends Component {
     if (this.state.messages.length === 0) {
       return <div>Loading...</div>
     } else {
-      console.log('app state', this.state.messages )
+      //console.log('app expandedMsgId', this.state.expandedMsgId )
       return (
          <div className='App container'>
           <h1>React Inbox</h1>
@@ -182,9 +194,12 @@ class App extends Component {
             clickComposeMsg={ this.clickComposeMsg } />
           <Messages
             messages={ this.state.messages }
+            expandedMsgId={ this.state.expandedMsgId }
+            msgBodyDiv={ this.state.msgBodyDiv }
             toggleClass={ this.toggleClass }
             composeCliked={ this.state.composeCliked }
-            sendMsg={ this.sendMsg } />
+            sendMsg={ this.sendMsg }
+            expandMsg={ this.expandMsg } />
         </div>
       )
     }

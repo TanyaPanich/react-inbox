@@ -6,7 +6,7 @@ class Message extends React.Component {
     this.state = {
       message: props.message,
       toggleClass: props.toggleClass,
-      msgBodyDiv: null
+      isExpanded: false
     }
   }
 
@@ -15,37 +15,32 @@ class Message extends React.Component {
   isChecked = () => this.state.message.selected ? 'checked' : ''
   isStarred = () => this.state.message.starred ? 'star fa fa-star' : 'star fa fa-star-o'
 
-  async getMsgBody (id) {
-    let body = ''
-    const responseMsgBody = await fetch(`/api/messages/${id}`)
-    if (responseMsgBody.status === 200) {
-      const jsonMsgBody = await responseMsgBody.json()
-      body = jsonMsgBody.body
+  async toggleMsgBody(id) {
+    let msgBodyDiv = null
+    if (!this.state.isExpanded) {
+      const responseMsgBody = await fetch(`/api/messages/${id}`)
+      if (responseMsgBody.status === 200) {
+        const jsonMsgBody = await responseMsgBody.json()
+        msgBodyDiv = this.constructBodyDiv(jsonMsgBody.body)
+      }
     }
-    this.setState({
-      ...this.state,
-       msgBody: body
-    })
+    this.state.isExpanded = !this.state.isExpanded
+    this.props.expandMsg(this.state.message, msgBodyDiv)
   }
 
-  toggleMsgBody = () => {
-    if(this.state.msgBodyDiv === null && this.state.msgBody) {
-      this.state.message.read = true
-      this.setState({
-        msgBodyDiv: <div className="row message-body">
-                      <div className="col-xs-11 col-xs-offset-1">
-                        { this.state.msgBody }
-                      </div>
-                    </div>
-      })
-    } else {
-      this.setState({
-        msgBodyDiv: null
-      })
-    }
+  constructBodyDiv(body) {
+    return <div className="row message-body">
+                  <div className="col-xs-11 col-xs-offset-1">
+                    { body }
+                  </div>
+                </div>
   }
 
   render() {
+    let isExpanded = this.props.expandedMsgId === this.state.message.id
+    let msgBodyDiv = isExpanded ? this.props.msgBodyDiv : null
+    // eslint-disable-next-line
+    this.state.isExpanded = isExpanded && msgBodyDiv != null
 
     return (
       <div>
@@ -78,15 +73,14 @@ class Message extends React.Component {
 
             <a onClick = {(e) => {
               e.preventDefault()
-              this.getMsgBody(this.state.message.id)
-              this.toggleMsgBody()
+              this.toggleMsgBody(this.state.message.id)
               }} >
               { this.state.message.subject }
             </a>
 
           </div>
         </div>
-        { this.state.msgBodyDiv}
+        { msgBodyDiv }
       </div>
     )
   }
