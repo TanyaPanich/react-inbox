@@ -3,17 +3,24 @@ import './App.css'
 import Messages from './components/Messages'
 import Toolbar from './components/Toolbar'
 
-
 class App extends Component {
 
-  state = { messages: [] }
+  constructor() {
+    super()
+    this.state = {
+      messages: []
+    }
+  }
 
   async componentDidMount() {
     const messagesResponse = await fetch(`/api/messages`)
     if (messagesResponse.status === 200) {
       const messagesJSON = await messagesResponse.json()
-      const messages = messagesJSON._embedded.messages
-      this.setState({ messages })
+      const newMessages = messagesJSON._embedded.messages
+      this.setState({
+        ...this.state,
+        messages: newMessages
+      })
     }
   }
 
@@ -60,82 +67,108 @@ class App extends Component {
   }
 
   bulkSelectUnselect = () => {
-        // eslint-disable-next-line
-      if (this.countMsgProps('selected') < this.state.messages.length) {
-        // eslint-disable-next-line
-        this.state.messages.forEach(message => {
-          message.selected = true
-        })
-        // eslint-disable-next-line
-        this.setState({ messages: this.state.messages })
-      } else {
-        // eslint-disable-next-line
-        this.state.messages.forEach(message => {
-          message.selected = false
-        })
-        // eslint-disable-next-line
-        this.setState({ messages:this.state.messages })
-      }
-    }
-
-    markReadUnread = (booleanValue) => {
       // eslint-disable-next-line
-      let ids = []
-      this.state.messages.forEach((message, idx) => {
-        if (message.selected) {
-          message.read = booleanValue
-          ids.push(message.id)
-          //console.log('is read? ', booleanValue)
-        }
-      })
+    if (this.countMsgProps('selected') < this.state.messages.length) {
       // eslint-disable-next-line
-      this.setState({ messages:this.state.messages })
-      this.storeState(ids, 'read', 'read', booleanValue)
-    }
-
-    updateMsgLabels = (label, booleanValue) => {
-      // eslint-disable-next-line
-      let ids = []
       this.state.messages.forEach(message => {
-        if (message.selected) {
-          ids.push(message.id)
-          if (booleanValue && !message.labels.includes(label)) {
-            //message.labels.push(label)
-            message.labels.push(label)
-            // message.labels = [...message.labels, label]
-            //console.log('--Label--', label, 'is added')
-          }
-          else if (!booleanValue) {
-            message.labels = message.labels.filter(l => l !== label)
-            //else if (!booleanValue && message.labels.includes(label)) {
-            //console.log('--Label--', label, 'is removed')
-            //message.labels.splice(message.labels.indexOf(label), 1)
-          }
-        }
+        message.selected = true
       })
-      this.setState({ messages:this.state.messages })
-      this.storeState(ids, booleanValue ? 'addLabel' : 'removeLabel', 'label', label)
-    }
-
-    deleteMsg = () => {
       // eslint-disable-next-line
-      let ids = []
-      this.state.messages.forEach((message,idx) => {
-        if (message.selected) {
-          this.state.messages.splice(this.state.messages.indexOf(message), 1)
-          ids.push(message.id)
-        }
+      this.setState({ messages: this.state.messages })
+    } else {
+      // eslint-disable-next-line
+      this.state.messages.forEach(message => {
+        message.selected = false
       })
+      // eslint-disable-next-line
       this.setState({ messages:this.state.messages })
-      this.storeState(ids, 'delete')
     }
+  }
 
+  markReadUnread = (booleanValue) => {
+    console.log('I am here')
+    // eslint-disable-next-line
+    let ids = []
+    this.state.messages.forEach((message, idx) => {
+      if (message.selected) {
+        message.read = booleanValue
+        ids.push(message.id)
+      }
+    })
+    // eslint-disable-next-line
+    this.setState({ messages:this.state.messages })
+    this.storeState(ids, 'read', 'read', booleanValue)
+  }
+
+  updateMsgLabels = (label, booleanValue) => {
+    // eslint-disable-next-line
+    let ids = []
+    this.state.messages.forEach(message => {
+      if (message.selected) {
+        ids.push(message.id)
+        if (booleanValue && !message.labels.includes(label)) {
+          message.labels.push(label)
+        }
+        else if (!booleanValue) {
+          message.labels = message.labels.filter(l => l !== label)
+        }
+      }
+    })
+    this.setState({ messages:this.state.messages })
+    this.storeState(ids, booleanValue ? 'addLabel' : 'removeLabel', 'label', label)
+  }
+
+  deleteMsg = () => {
+    // eslint-disable-next-line
+    let ids = []
+    this.state.messages.forEach((message,idx) => {
+      if (message.selected) {
+        this.state.messages.splice(this.state.messages.indexOf(message), 1)
+        ids.push(message.id)
+      }
+    })
+    this.setState({ messages:this.state.messages })
+    this.storeState(ids, 'delete')
+  }
+
+  clickComposeMsg = () => {
+    this.setState ({
+      composeCliked: !this.state.composeCliked
+    })
+  }
+
+  async sendMsg (subject, body) {
+    const composedMsg = {'subject': subject, 'body': body}
+    console.log('composedMsg:', composedMsg)
+    //const composedMsgResponse =
+    await fetch(`/api/messages`, {
+      method: 'POST',
+      body: JSON.stringify(composedMsg),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }
+    })
+    //do I need this at all??
+    // console.log('composedMsgResponse', composedMsgResponse)
+    // if (composedMsgResponse.status === 200) {
+    //   const postedMsg = await composedMsgResponse.json()
+    //   console.log('postedMsg', postedMsg)
+
+      //None of this works now (message is posted, but gives an error)
+      //this.componentDidMount()
+
+      // 2. this.setState({
+      //   messages: [...this.state.messages, postedMsg]
+      // })
+    //}
+  }
 
   render() {
     if (this.state.messages.length === 0) {
       return <div>Loading...</div>
     } else {
-      //console.log('app state', this.state.messages )
+      console.log('app state', this.state.messages )
       return (
          <div className='App container'>
           <h1>React Inbox</h1>
@@ -145,10 +178,13 @@ class App extends Component {
             bulkSelectUnselect={ this.bulkSelectUnselect }
             markReadUnread={ this.markReadUnread }
             updateMsgLabels={ this.updateMsgLabels }
-            deleteMsg={ this.deleteMsg } />
+            deleteMsg={ this.deleteMsg }
+            clickComposeMsg={ this.clickComposeMsg } />
           <Messages
             messages={ this.state.messages }
-            toggleClass={ this.toggleClass } />
+            toggleClass={ this.toggleClass }
+            composeCliked={ this.state.composeCliked }
+            sendMsg={ this.sendMsg } />
         </div>
       )
     }

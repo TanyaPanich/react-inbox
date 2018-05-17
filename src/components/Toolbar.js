@@ -10,7 +10,8 @@ class Toolbar extends React.Component {
       bulkSelectUnselect: this.props.bulkSelectUnselect,
       markReadUnread: this.props.markReadUnread,
       updateMsgLabels: this.props.updateMsgLabels,
-      deleteMsg: this.props.deleteMsg
+      deleteMsg: this.props.deleteMsg,
+      clickComposeMsg: this.props.clickComposeMsg
     }
   }
 
@@ -35,6 +36,13 @@ class Toolbar extends React.Component {
             </span>
             unread messages
           </p>
+
+          <a className="btn btn-danger">
+            <i className="fa fa-plus"
+              onClick={() => {
+                this.state.clickComposeMsg()}}>
+            </i>
+          </a>
 
           <button className="btn btn-default"
                   onClick={() => {
